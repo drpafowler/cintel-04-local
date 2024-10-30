@@ -1,8 +1,7 @@
 import pandas as pd
-from palmerpenguins import load_penguins
 
-# Load the original dataset
-penguins = load_penguins()
+# load the penguins.csv    
+penguins = pd.read_csv('D:/NWMissouri/44630 CI/cintel-04-local/penguins/penguins.csv')
 
 # Replicate the dataset to create 5000 rows
 replicated_penguins = pd.concat([penguins] * (5000 // len(penguins)), ignore_index=True)

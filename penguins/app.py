@@ -7,6 +7,7 @@ from shinywidgets import render_widget
 import seaborn as sns
 
 
+
 ui.page_opts(title=ui.h1("Philip's Penguins", style="text-align: center;"), fillable=True)
 
 
