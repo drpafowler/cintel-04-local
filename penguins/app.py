@@ -171,6 +171,7 @@ with ui.layout_columns():
                         x=input.xaxis(),
                         bins=input.bins(),
                         hue=input.hue_control(),
+                        kde=True,
                         multiple="stack",
                     )
                 # If filtering is disabled, use unfiltered data
@@ -179,6 +180,7 @@ with ui.layout_columns():
                         data=filtered_df(),
                         x=input.xaxis(),
                         bins=input.bins(),
+                        kde=True,
                     )
 
     with ui.card(full_screen=True):
