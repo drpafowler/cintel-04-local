@@ -18,13 +18,16 @@ with ui.sidebar(title=ui.h2("Display Controls"), width="400px"):
     ui.input_select("xaxis", "X-axis (all plots)", ["bill_length_mm", "bill_depth_mm", "body_mass_g"], selected="bill_length_mm")
     
     # Input for selecting the y-axis variable for scatterplots
-    ui.input_select("yaxis", "Scatterplot Y-axis", ["bill_length_mm", "bill_depth_mm", "body_mass_g"], selected="bill_depth_mm")
+    ui.input_select("yaxis", "Y-axis (Scatterplot & Violin)", ["bill_length_mm", "bill_depth_mm", "body_mass_g"], selected="bill_depth_mm")
     
     # Input for selecting the hue control variable
     ui.input_select("hue_control", "Hue Control", ["sex", "species", "island"], selected="species")
     
     # Input slider for selecting the number of bins for histograms
     ui.input_slider("bins", "Number of bins (histogram)", 5, 50, 20, post=" bins")
+
+    # Input slider for the secondary plot
+    ui.input_select("secondary_plot", "Secondary Plot", ["Correlation Heatmap", "Violin Plot"], selected="Correlation Heatmap")
 
     ui.hr()
 
@@ -68,8 +71,7 @@ with ui.sidebar(title=ui.h2("Display Controls"), width="400px"):
         selected=["Biscoe", "Dream", "Torgersen"],
         inline=True,
     )   
-    # Button to reset all filters to their initial settings
-    ui.input_action_button("reset", "Reset Filters")
+
 
 
     # Link to GitHub repository
@@ -254,16 +256,26 @@ with ui.layout_columns():
 
     with ui.card(full_screen=True):
         # Card header for the correlation heatmap
-        ui.card_header("Penguin Correlation Table")
+        ui.card_header("Secondary Plots")
         
         @render.plot
-        def correlation_heatmap():
-            # Columns to be used for the correlation heatmap
-            cols = ["bill_length_mm", "bill_depth_mm", "body_mass_g"]
-            # Calculate the correlation matrix
-            corr = filtered_df()[cols].corr()
-            # Render the heatmap with annotations and a color map
-            return sns.heatmap(corr, annot=True, cmap="coolwarm", vmin=-1, vmax=1)
+        def secondary_plots():
+            if input.secondary_plot() == "Correlation Heatmap":
+                # Columns to be used for the correlation heatmap
+                cols = ["bill_length_mm", "bill_depth_mm", "body_mass_g"]
+                # Calculate the correlation matrix
+                corr = filtered_df()[cols].corr()
+                # Render the heatmap with annotations and a color map
+                return sns.heatmap(corr, annot=True, cmap="coolwarm", vmin=-1, vmax=1)
+            elif input.secondary_plot() == "Violin Plot":
+                # Render the violin plot
+                return sns.violinplot(
+                    data=filtered_df(),
+                    x="species",
+                    hue=input.hue_control(),
+                    y=input.yaxis(),
+                    inner="quartile"
+                )
 
 # Include custom CSS styles
 ui.include_css(app_dir / "styles.css")
